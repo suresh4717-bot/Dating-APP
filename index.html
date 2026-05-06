@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doc Generator - Reset</title>
+    <!-- Essential Tools -->
+    <script src="https://unpkg.com"></script>
+    <script src="https://jsdelivr.net"></script>
+    
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f0f2f5; }
+        .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        #status { margin-top: 15px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h3>Document Generator</h3>
+    <input type="text" id="projName" placeholder="Enter Project Name">
+    <button onclick="makeDoc()">Download Word Doc</button>
+    <p id="status">Ready to generate.</p>
+</div>
+
+<script>
+    async function makeDoc() {
+        const status = document.getElementById('status');
+        const name = document.getElementById('projName').value || "My_Project";
+        
+        try {
+            status.innerText = "Generating... please wait.";
+            
+            // 1. Create Document
+            const doc = new docx.Document({
+                sections: [{
+                    children: [
+                        new docx.Paragraph({
+                            children: [new docx.TextRun({ text: name, bold: true, size: 48 })]
+                        }),
+                        new docx.Paragraph({ text: "Generated on: " + new Date().toLocaleDateString() })
+                    ],
+                }],
+            });
+
+            // 2. Convert to File
+            const blob = await docx.Packer.toBlob(doc);
+            
+            // 3. Save to Computer
+            saveAs(blob, name + ".docx");
+            
+            status.innerText = "Success! Check your downloads.";
+        } catch (err) {
+            status.innerText = "Error: " + err.message;
+            console.error(err);
+        }
+    }
+</script>
+
+</body>
+</html>
