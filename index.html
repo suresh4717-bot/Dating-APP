@@ -1,63 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Doc Generator</title>
-    <!-- This "CDN" allows us to use your library without installing anything -->
+    <title>Professional Doc Generator</title>
     <script src="https://unpkg.com"></script>
+    <!-- Fixed the link below for you -->
     <script src="https://cloudflare.com"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 40px; background: #f5f5f5; text-align: center; }
-        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: inline-block; }
-        input { padding: 10px; width: 250px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
-        button { background: #1A56A0; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #F5F5F5; padding: 50px; display: flex; justify-content: center; }
+        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        h2 { color: #1A56A0; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 30px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #E0E0E0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        input:focus { border-color: #1A56A0; outline: none; }
+        button { background: #1A56A0; color: white; border: none; padding: 15px 30px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: background 0.3s; }
         button:hover { background: #144580; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Document Generator</h2>
-    <p>Enter the Project Name to generate your Word file:</p>
-    <input type="text" id="projName" placeholder="e.g. My Dating App Project"><br>
-    <button onclick="generateDoc()">Download .docx</button>
+<div class="container">
+    <h2>Dating-APP Generator</h2>
+    <p>Generate your professional project document in one click.</p>
+    <input type="text" id="projName" placeholder="Enter Project Name (e.g. Alpha Build)">
+    <button onclick="generateDoc()">Create Word Document</button>
 </div>
 
 <script>
-// --- YOUR ORIGINAL LOGIC START ---
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle } = docx;
+const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle } = docx;
 
+// These are the helpers from your first message
 function h1(text) {
   return new Paragraph({
     heading: HeadingLevel.HEADING_1,
+    spacing: { before: 360, after: 160 },
     children: [new TextRun({ text, font: "Arial", size: 36, bold: true, color: "1A1A2E" })]
   });
 }
 
 function body(text) {
   return new Paragraph({
+    spacing: { before: 120, after: 120 },
     children: [new TextRun({ text, font: "Arial", size: 22, color: "333333" })]
   });
 }
-// --- YOUR ORIGINAL LOGIC END ---
 
 async function generateDoc() {
-    const name = document.getElementById('projName').value || "Project";
+    const name = document.getElementById('projName').value || "My Project";
     
     const doc = new Document({
         sections: [{
             children: [
                 h1(name),
-                body("This document was generated automatically from your website."),
-                body("Date: " + new Date().toLocaleDateString())
+                body("This is a professionally generated document using your custom script."),
+                body("Project Name: " + name),
+                body("Generated on: " + new Date().toLocaleDateString())
             ],
         }],
     });
 
     const blob = await Packer.toBlob(doc);
-    saveAs(blob, name + ".docx");
+    saveAs(blob, name.replace(/\s+/g, '_') + "_Proposal.docx");
 }
 </script>
 
 </body>
 </html>
-
